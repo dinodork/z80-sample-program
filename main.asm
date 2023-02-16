@@ -57,7 +57,7 @@ screen_top: defb    0   ; WPMEMx
  ORG $8000
 
 Text_Scores:
-    DB 10,14,"Hejsan",0xFE
+    DB 0,7,"Hejsan",0xFE
     DB 9,0,"Score 00000000",0xFE
     DB 24,0,"Lives 0",0xFF
 
@@ -80,7 +80,7 @@ main:
     ;ei
 
 main_loop:
-    ld b, 15
+    ld b, 20
 6:
     ; fill line with color
     ld hl,(fill_colors_ptr)

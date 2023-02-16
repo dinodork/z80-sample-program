@@ -205,7 +205,7 @@ Print_Char_At:		PUSH AF
 ; No SM code here - needs to be re-enterent if called on interrupt
 ;
 Print_Char:
-			LD DE, 0x3C01			; Address of character set in ROM
+			LD DE, 0x3C00		; Address of character set in ROM
 			PUSH HL
 			LD B, 0				; Get index into character set
 			LD C, A
@@ -216,7 +216,7 @@ Print_Char:
 			EX DE, HL
 			ADD HL, BC 
 			EX DE, HL	
-			CALL Print_UDG8
+			CALL Print_UDG8_double_height
 			POP HL
 			RET 	
 
@@ -265,7 +265,82 @@ Print_UDG8:
 			INC H				; Goto next line on screen
 			INC DE				; Goto next byte of character
 
+			RET
+
+
+Print_UDG8_double_height:
+			LD A,(DE)			; Get the byte into A
+			LD (HL),A			; Stick A onto the screen
+			INC H				; Goto next line on screen
+			LD (HL),A			; And again...
+			INC H
+			INC DE				; Go to the next byte of character
+
+			LD A,(DE)			; Get the byte into A
+			LD (HL),A			; Stick A onto the screen
+			INC H				; Goto next line on screen
+			LD (HL),A			; And again...
+			INC H
+			INC DE				; Go to the next byte of character
+
+			LD A,(DE)			; Get the byte into A
+			LD (HL),A			; Stick A onto the screen
+			INC H				; Goto next line on screen
+			LD (HL),A			; And again...
+			INC H
+			INC DE				; Go to the next byte of character
+
+			LD A,(DE)			; Get the byte into A
+			LD (HL),A			; Stick A onto the screen
+			INC H				; Goto next line on screen
+			LD (HL),A			; And again...
+			INC H
+			INC DE				; Go to the next byte of character
+
+			LD A,H				; Check if we have gone onto next character boundary
+			INC A
+			AND 7
+			JP Z, Print_UDG8_double_height_bottom_half				; No, so skip the next bit
+
+			LD A, H
+			SUB 8
+			LD H, A
+
+			LD A, L
+            ADD 32
+			LD L, A
+
+Print_UDG8_double_height_bottom_half:
+			LD A,(DE)			; Get the byte into A
+			LD (HL),A			; Stick A onto the screen
+			INC H				; Goto next line on screen
+			LD (HL),A			; And again...
+			INC H
+			INC DE				; Go to the next byte of character
+
+			LD A,(DE)
+			LD (HL),A
+			INC H
+			LD (HL),A
+			INC H
+			INC DE
+
+			LD A,(DE)
+			LD (HL),A
+			INC H
+			LD (HL),A
+			INC H
+			INC DE
+
+			LD A,(DE)
+			LD (HL),A
+			INC H
+			LD (HL),A
+			INC H
+			INC DE
+
 			RET			
+
 next_line:
 			INC H
 			INC DE
