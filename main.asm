@@ -37,6 +37,7 @@ screen_top: defb    0   ; WPMEMx
     include "utilities.asm"
     include "fill.asm"
     include "clearscreen.asm"
+    include "lib/output.z80"
 
     ; Normally you would assemble the unit tests in a separate target
     ; in the makefile.
@@ -54,6 +55,11 @@ screen_top: defb    0   ; WPMEMx
 
  defs 0x8000 - $
  ORG $8000
+
+Text_Scores:
+    DB 10,14,"Hejsan",0xFE
+    DB 9,0,"Score 00000000",0xFE
+    DB 24,0,"Lives 0",0xFF
 
 main:
     ; Disable interrupts
@@ -74,7 +80,7 @@ main:
     ;ei
 
 main_loop:
-    ld b,8
+    ld b, 15
 6:
     ; fill line with color
     ld hl,(fill_colors_ptr)
@@ -82,11 +88,6 @@ main_loop:
     push bc
     call fill_bckg_line
     pop bc
-    ; break
-    push de
-    ld de,PAUSE_TIME
-    call pause
-    pop de
 
     ; Alternatively wait on vertical interrupt
     ;halt
@@ -96,7 +97,12 @@ main_loop:
     call inc_fill_colors_ptr
     pop bc
 
-    DJNZ 6B	   
+    DJNZ 6B
+
+    push de
+    LD IX, Text_Scores
+    CALL Print_String
+    pop de
 spinlock:
     jr spinlock
 
