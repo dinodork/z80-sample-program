@@ -74,11 +74,14 @@ main:
     ;ei
 
 main_loop:
+    ld b,8
+6:
     ; fill line with color
     ld hl,(fill_colors_ptr)
     ld a,(hl)
+    push bc
     call fill_bckg_line
-
+    pop bc
     ; break
     push de
     ld de,PAUSE_TIME
@@ -89,9 +92,13 @@ main_loop:
     ;halt
 
     ; next line
+    push bc
     call inc_fill_colors_ptr
+    pop bc
 
-    jr main_loop
+    DJNZ 6B	   
+spinlock:
+    jr spinlock
 
 
 ;===========================================================================

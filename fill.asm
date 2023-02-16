@@ -9,11 +9,11 @@ BCKG_LINE_SIZE:  equ     32
 ; Colors
 BLACK:          equ 0<<3
 BLUE:           equ 1<<3
-RED:            equ 2<<3
+RED:            equ 2<<3|1<<6
 MAGENTA:        equ 3<<3
 GREEN:          equ 4<<3
-CYAN:           equ 5<<3
-YELLOW:         equ 6<<3
+CYAN:           equ 5<<3|1<<6
+YELLOW:         equ 6<<3|1<<6
 WHITE:          equ 7<<3
 
 
@@ -75,7 +75,7 @@ fill_colors_ptr:    defw 0
 
 ; Contains the colors for the lines. Each entry represents the color for one line.
 fill_colors:
-    defb RED, YELLOW, BLUE, GREEN, MAGENTA
+    defb YELLOW, CYAN
 fill_colors_end:
     defb 0  ; WPMEM
 
