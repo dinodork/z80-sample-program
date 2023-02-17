@@ -22,37 +22,44 @@
 Initialise_Sprites:
 	LD IX, Sprite_Data
 	LD B, Sprite_Max
-Initialise_Sprites_1:	CALL RND16
-	LD A,H
+Initialise_Sprites_1:
+	CALL RND16
+	LD A, H
 	AND 0x7F
-	ADD A,16
-	LD (IX+Sprite_X),L
-	LD (IX+Sprite_X_Old),L
-	LD (IX+Sprite_Y),A
-	LD (IX+Sprite_Y_Old),A
-	LD HL,Demo_Sprite_Logic
-	LD (IX+Sprite_Logic),L
-	LD (IX+Sprite_Logic+1),H
-	LD DE,Sprite_Data_Block_Size
-	ADD IX,DE
+	ADD A, 16
+	LD (IX + Sprite_X), L
+	LD (IX + Sprite_X_Old), L
+	LD (IX + Sprite_Y), A
+	LD (IX + Sprite_Y_Old), A
+	LD HL, Demo_Sprite_Logic
+	LD (IX + Sprite_Logic), L
+	LD (IX + Sprite_Logic + 1), H
+	LD (IX + Sprite_Speed), 1
+	LD DE, Sprite_Data_Block_Size
+	ADD IX, DE
 	DJNZ Initialise_Sprites_1
 	RET
 
+; Move the sprite horizontally
+; IX : Address of the Sprite's data block
 Demo_Sprite_Logic:
 	LD A, (IX + Sprite_X)
 	INC A
 	CP 240
 	JR C, Demo_Sprite_Logic_1
 	LD A,0
+
+; Move the sprite vertically
 Demo_Sprite_Logic_1
 	LD (IX + Sprite_X), A
 	LD A, (IX + Sprite_Y)
-	INC A
+	ADD A, (IX + Sprite_Speed)
 	CP 176
 	JR C, Demo_Sprite_Logic_2
 	LD A, 16
-Demo_Sprite_Logic_2	LD (IX+Sprite_Y),A
-			RET 
+Demo_Sprite_Logic_2
+	LD (IX + Sprite_Y), A
+	RET
 
 Interrupt:
 	DI

@@ -13,8 +13,9 @@
 
 ; This routine goes through the sprite logic table and runs the logic routine for each sprite
 ;
-Handle_Sprites: 	LD IX,Sprite_Data			; The sprite data block
-			LD B,Sprite_Max				; The number of sprites to handle
+Handle_Sprites:
+ 	LD IX, Sprite_Data	; The sprite data block
+	LD B, Sprite_Max	; The number of sprites to handle
 Handle_Sprites_1:	ld A,(IX+Sprite_Logic+1)		; Get the high address of the handler routine
 	AND A			; If it is zero
 	JR Z,Handle_Sprites_3	; Then don't process the sprite
@@ -123,17 +124,18 @@ Clear_Sprite_2:
 	DJNZ Clear_Sprite_1
 	RET
 			
-Sprite_Image:		EQU 0x00
+Sprite_Image:	EQU 0x00
 Sprite_X:		EQU 0x01
 Sprite_Y:		EQU 0x02
 Sprite_w:		EQU 0x03
 Sprite_H:		EQU 0x04
-Sprite_Logic:		EQU 0x05
-Sprite_Flags:		EQU 0x07
-Sprite_X_Old:		EQU 0x08
-Sprite_Y_Old:		EQU 0x09
+Sprite_Logic:	EQU 0x05
+Sprite_Flags:	EQU 0x07
+Sprite_X_Old:	EQU 0x08
+Sprite_Y_Old:	EQU 0x09
+Sprite_Speed:	EQU 0x0A
 
-Sprite_Data_Block_Size:	EQU 0x0A
+Sprite_Data_Block_Size:	EQU 0x0B
 Sprite_Max:		EQU 0x0D
 
 Sprite_Data:		DEFS (Sprite_Max * Sprite_Data_Block_Size), 0

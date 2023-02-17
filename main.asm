@@ -63,7 +63,7 @@ main:
 jqqw
 	DI
 	LD SP, Stack_Top
-	LD A,38h
+	LD A, 38h
 	CALL Clear_Screen
 	LD IX, Text_Scores
 	CALL Print_String
