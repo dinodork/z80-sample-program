@@ -19,39 +19,43 @@
 			include "../lib/sprite.z80"
 			include "../lib/math.z80"
 
-Initialise_Sprites:	LD IX,Sprite_Data
-			LD B,Sprite_Max
+Initialise_Sprites:
+	LD IX, Sprite_Data
+	LD B, Sprite_Max
 Initialise_Sprites_1:	CALL RND16
-			LD A,H
-			AND 0x7F
-			ADD A,16
-			LD (IX+Sprite_X),L
-			LD (IX+Sprite_X_Old),L
-			LD (IX+Sprite_Y),A
-			LD (IX+Sprite_Y_Old),A
-			LD HL,Demo_Sprite_Logic
-			LD (IX+Sprite_Logic),L
-			LD (IX+Sprite_Logic+1),H
-			LD DE,Sprite_Data_Block_Size
-			ADD IX,DE
-			DJNZ Initialise_Sprites_1
-			RET
+	LD A,H
+	AND 0x7F
+	ADD A,16
+	LD (IX+Sprite_X),L
+	LD (IX+Sprite_X_Old),L
+	LD (IX+Sprite_Y),A
+	LD (IX+Sprite_Y_Old),A
+	LD HL,Demo_Sprite_Logic
+	LD (IX+Sprite_Logic),L
+	LD (IX+Sprite_Logic+1),H
+	LD DE,Sprite_Data_Block_Size
+	ADD IX,DE
+	DJNZ Initialise_Sprites_1
+	RET
 
-Demo_Sprite_Logic:	LD A,(IX+Sprite_X)
-			INC A
-			CP 240
-			JR C,Demo_Sprite_Logic_1
-			LD A,0
-Demo_Sprite_Logic_1	LD (IX+Sprite_X),A
-			LD A,(IX+Sprite_Y)
-			INC A
-			CP 176
-			JR C,Demo_Sprite_Logic_2
-			LD A,16
+Demo_Sprite_Logic:
+	LD A, (IX + Sprite_X)
+	INC A
+	CP 240
+	JR C, Demo_Sprite_Logic_1
+	LD A,0
+Demo_Sprite_Logic_1
+	LD (IX + Sprite_X), A
+	LD A, (IX + Sprite_Y)
+	INC A
+	CP 176
+	JR C, Demo_Sprite_Logic_2
+	LD A, 16
 Demo_Sprite_Logic_2	LD (IX+Sprite_Y),A
 			RET 
 
-Interrupt:		DI
+Interrupt:
+	DI
 			PUSH AF
 			PUSH BC
 			PUSH DE
@@ -66,7 +70,7 @@ Interrupt:		DI
 			PUSH IY
 			LD A,2
 			OUT (254),A
-			LD HL,Sprite_Bubble
+			LD HL, Sprite_Bubble
 			CALL Render_Sprites
 			CALL Handle_Sprites
 			LD A,7
@@ -90,7 +94,7 @@ Text_Scores:		DB 0,0,"Demo",0xFE
 			DB 9,0,"Score 00000000",0xFE
 			DB 24,0,"Lives 0",0xFF
 
-Sprite_Bubble:		DW Sprite_Bubble_0,Sprite_Bubble_0,Sprite_Bubble_2,Sprite_Bubble_2,Sprite_Bubble_4,Sprite_Bubble_4,Sprite_Bubble_6,Sprite_Bubble_6
+Sprite_Bubble:	DW 	Sprite_Bubble_0, Sprite_Bubble_0,		Sprite_Bubble_2, Sprite_Bubble_2,		Sprite_Bubble_4, Sprite_Bubble_4,		Sprite_Bubble_6, Sprite_Bubble_6
 
 Sprite_Bubble_0:	DB %00000000,%00000000,%00000000
 			DB %00000011,%11000000,%00000000

@@ -122,9 +122,11 @@ Sort_Sprite_2:		LD A,IXH
 
 ; Render the sprites
 ;
-Render_Sprites:		LD IY,Sprite_Sort_Table
-			LD B,Sprite_Sort_Table_Size
-Render_Sprites_0:	PUSH BC
+Render_Sprites:
+	LD IY, Sprite_Sort_Table
+	LD B, Sprite_Sort_Table_Size
+Render_Sprites_0:
+			PUSH BC
 			LD A,(IY+1)
 			AND A
 			JR Z,Render_Sprites_1
@@ -150,7 +152,8 @@ Render_Sprites_1:	POP BC
 ; - height (1 byte)       : sprite height in pixels
 ; - definitions (8 words) : one word per pre-shifted sprite definition
 ;
-Render_Sprite:		LD A,(DE)				; The sprite width 
+Render_Sprite:
+			LD A,(DE)				; The sprite width 
 			INC DE
 			CP 3
 			JP Z, Render_Sprite_24px
