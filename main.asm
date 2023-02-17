@@ -4,7 +4,7 @@
 
     SLDOPT COMMENT WPMEM, LOGPOINT, ASSERTION
 
-NEX:    equ 1   ;  1=Create nex file, 0=create sna file
+NEX:    equ 0   ;  1=Create nex file, 0=create sna file
 
     IF NEX == 0
         ;DEVICE ZXSPECTRUM128
@@ -37,7 +37,7 @@ screen_top: defb    0   ; WPMEMx
     include "utilities.asm"
     include "fill.asm"
     include "clearscreen.asm"
-    include "lib/output.z80"
+    include "src/demo_sprites.z80"
 
     ; Normally you would assemble the unit tests in a separate target
     ; in the makefile.
@@ -56,56 +56,32 @@ screen_top: defb    0   ; WPMEMx
  defs 0x8000 - $
  ORG $8000
 
-Text_Scores:
-    DB 0,7,"Hejsan",0xFE
-    DB 9,0,"Score 00000000",0xFE
-    DB 24,0,"Lives 0",0xFF
-
+Stack_Top:		EQU 0xFFF0
+			LD SP, Stack_Top
+            
 main:
-    ; Disable interrupts
-    di
-    ld sp,stack_top
+	DI
+	LD SP, Stack_Top
+	LD A,38h
+	CALL Clear_Screen
+	LD IX,Text_Scores
+	CALL Print_String
+	CALL Initialise_Sprites
+	LD HL,Interrupt
+	LD IX,0xFFF0
+	LD (IX+04h),0xC3         		   ; Opcode for JP
+	LD (IX+05h),L
+	LD (IX+06h),H
+	LD (IX+0Fh),0x18        		    ; Opcode for JR; this will do JR to FFF4h
+	LD A,0x39
+	LD I,A
+	IM 2
+	EI
 
-    ; CLS
-    call clear_screen
-    call clear_backg
-
-    ; Init
-    ld hl,fill_colors
-    ld (fill_colors_ptr),hl
-    ld de,COLOR_SCREEN
-
-    ; Enable interrupts
-    ;im 1
-    ;ei
-
-main_loop:
-    ld b, 20
-6:
-    ; fill line with color
-    ld hl,(fill_colors_ptr)
-    ld a,(hl)
-    push bc
-    call fill_bckg_line
-    pop bc
-
-    ; Alternatively wait on vertical interrupt
-    ;halt
-
-    ; next line
-    push bc
-    call inc_fill_colors_ptr
-    pop bc
-
-    DJNZ 6B
-
-    push de
-    LD IX, Text_Scores
-    CALL Print_String
-    pop de
-spinlock:
-    jr spinlock
-
+LOOP:
+	HALT
+	CALL Read_Keyboard
+	JR LOOP
 
 ;===========================================================================
 ; Stack.
