@@ -28,7 +28,7 @@
             "startAutomatically": false,
             "commandsAfterLaunch": [
             ],
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.sna",
@@ -53,7 +53,7 @@
             "startAutomatically": false,
             "commandsAfterLaunch": [
             ],
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -78,7 +78,7 @@
             "startAutomatically": false,
             "commandsAfterLaunch": [
             ],
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -105,7 +105,7 @@
             },
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -128,7 +128,7 @@
             ],
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             "load": "z80-sample-program.sna",
             "smallValuesMaximum": 513,
@@ -155,7 +155,7 @@
                 }
             ],
             "startAutomatically": true,
-            "rootFolder": "${workspaceFolder}",
+            "rootFolder": "${config:buildDirectory}",
             "load": "z80-sample-program.nex"
         }
 

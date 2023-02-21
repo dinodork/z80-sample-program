@@ -2,13 +2,30 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "create build directory",
+            "type": "shell",
+            "osx": {
+                "command": "mkdir -p ${config:buildDirectory}"
+            },
+            /*
+            "windows": {
+                "command": "mkdir .\\build\\release", // Not working when folder already exists !
+            },
+            */
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "label": "make (sjasmplus)",
             "type": "shell",
             "command": "sjasmplus", // Please add the full path to sjasmplus
             "args": [
-                "--sld=z80-sample-program.sld",
+                "--outprefix=${config:buildDirectory}/",
+                "--sld=${config:buildDirectory}/z80-sample-program.sld",
                 "--fullpath",
-                "main.asm"
+                "${workspaceFolder}/main.asm"
             ],
             "problemMatcher": {
                 "owner": "sjasmplus",
@@ -24,29 +41,30 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn": "create build directory"
         },
-
         {
             "label": "start zesarux",
             "type": "shell",
             "command": "./zesarux",
             "args": [
-                "--noconfigfile",           // Do not load configuration file
-                "--machine", "tbblue",      // Emulate ZX Next
-                "--tbblue-fast-boot-mode",  // Boots tbblue directly to a 48 rom but with all the Next features enabled
+                "--noconfigfile", // Do not load configuration file
+                "--machine",
+                "tbblue", // Emulate ZX Next
+                "--tbblue-fast-boot-mode", // Boots tbblue directly to a 48 rom but with all the Next features enabled
                 "--snap-no-change-machine", // Do not change machine when loading sna or z80 snapshots. Just load it on memory
-                "--enable-esxdos-handler",  // Enable ESXDOS traps handler
-                "--enable-remoteprotocol",  // Enable ZRCP remote protocol
-                "--disable-autoframeskip",  // Dissable auto skip
-                "--esxdos-root-dir", "."    // Set ESXDOS root directory
+                "--enable-esxdos-handler", // Enable ESXDOS traps handler
+                "--enable-remoteprotocol", // Enable ZRCP remote protocol
+                "--disable-autoframeskip", // Dissable auto skip
+                "--esxdos-root-dir",
+                "." // Set ESXDOS root directory
             ],
             "options": {
                 "cwd": "${config:zesarux_dir}",
             },
             "problemMatcher": []
         },
-
         {
             "label": "start cspect",
             "type": "shell",
@@ -65,7 +83,6 @@
             },
             "problemMatcher": []
         },
-
         {
             "label": "start mame",
             "type": "shell",
