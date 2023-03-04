@@ -81,18 +81,22 @@ Render_Sprite:
 	LD D,(HL)
 	POP HL			; Get screen address back
 	LD B, 16		; Height of sprite, in pixels
-Render_Sprite_1:
+
+; Renders one pixel row of a sprite
+; DE = Address of first byte of sprite row
+; L = Offset from start of screen memory?
+Render_Sprite_Row:
 	LD A, (DE)		; Fetch sprite definition
 	OR (HL)			; OR with contents of screen
 	LD (HL), A		; Write back to screen
 	INC DE			; Next byte of sprite definition
 	INC L			; Next byte of screen memory
 
-	LD A, (DE)		; Fetch and write again...
-	OR (HL)
-	LD (HL), A
-	INC DE
-	INC L
+	; LD A, (DE)		; Fetch and write again...
+	; OR (HL)
+	; LD (HL), A
+	; INC DE
+	; INC L
 
 	LD A, (DE)		; And again...
 	OR (HL)
@@ -100,9 +104,9 @@ Render_Sprite_1:
 	INC DE
 
 	DEC L			; Go back to original screen address
-	DEC L
+;	DEC L
 	CALL Pixel_Address_Down
-Render_Sprite_2:	DJNZ Render_Sprite_1
+Render_Sprite_2:	DJNZ Render_Sprite_Row
 	RET
 
 ; Clear a single sprite

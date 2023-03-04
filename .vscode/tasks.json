@@ -18,6 +18,17 @@
             }
         },
         {
+            "label": "generate asm from graphics",
+            "type": "shell",
+            "osx": {
+                "command": "python3 export_to_bin.py",
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+        },
+        {
             "label": "make (sjasmplus)",
             "type": "shell",
             "command": "sjasmplus", // Please add the full path to sjasmplus
@@ -42,7 +53,10 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": "create build directory"
+            "dependsOn": [
+                "generate asm from graphics",
+                "create build directory"
+            ]
         },
         {
             "label": "start zesarux",
@@ -91,6 +105,17 @@
                 "cwd": "${config:mame_dir}"
             },
             "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "exportToBin",
+            "type": "command",
+            "command": "export_to_bin.py",
+            "args": [
+                "File",
+                "${cwd}\\somefile.js"
+            ]
         }
     ]
 }
