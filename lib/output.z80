@@ -37,7 +37,7 @@ Clear_Screen:		LD HL,16384			; Start address of screen bitmap
 ;  B: Height
 ;
 Fill_Attr:		LD DE,32
-1:			PUSH HL	
+1:			PUSH HL
 			PUSH BC
 2:			LD (HL), A
 			INC L
@@ -75,30 +75,31 @@ Print_String_0:		LD A,(IX)			; Fetch the character to print
 ; H = Y character position
 ; L = X character position
 ;
-Get_Char_Address:	LD A,H
-			AND %00000111
-			RRA
-			RRA
-			RRA
-			RRA
-			OR L
-			LD L,A
-			LD A,H
-			AND %00011000
-			OR %01000000
-			LD H,A
-			RET				; Returns screen address in HL
+Get_Char_Address:
+	LD A, H
+	AND %00000111
+	RRA
+	RRA
+	RRA
+	RRA
+	OR L
+	LD L, A
+	LD A, H
+	AND %00011000
+	OR %01000000
+	LD H, A
+	RET				; Returns screen address in HL
 
 ; Move HL down one character line
 ;
 Char_Address_Down:	LD A, L
 			ADD A, 32
 			LD L, A
-			RET NC 
-			LD A, H 
-			ADD A, 8 
+			RET NC
+			LD A, H
+			ADD A, 8
 			LD H, A
-			RET 
+			RET
 
 ; Get screen address
 ; B = Y pixel position
@@ -194,9 +195,10 @@ Print_BCD:		PUSH AF				; Store the value
 ;   L:  Row
 ;   DE: Address of character set
 ;
-Print_Char_At:		PUSH AF
-			CALL Get_Char_Address
-			POP AF				; Fall through to Print_Char
+Print_Char_At:
+	PUSH AF
+	CALL Get_Char_Address
+	POP AF				; Fall through to Print_Char
 ;
 ; Print a single character out to a screen address
 ;  A:  Character to print
@@ -204,20 +206,21 @@ Print_Char_At:		PUSH AF
 ;  DE: Address of character set (if entering at Print_Char_UDG)
 ; No SM code here - needs to be re-enterent if called on interrupt
 ;
-Print_Char:		LD DE, 0x3C00			; Address of character set in ROM
-			PUSH HL
-			LD B, 0				; Get index into character set
-			LD C, A
-			DUP 3
-			SLA C
-			RL B
-			EDUP
-			EX DE, HL
-			ADD HL, BC 
-			EX DE, HL	
-			CALL Print_UDG8
-			POP HL
-			RET 	
+Print_Char:
+	LD DE, 0x3C00			; Address of character set in ROM
+	PUSH HL
+	LD B, 0				; Get index into character set
+	LD C, A
+	DUP 3
+	SLA C
+	RL B
+	EDUP
+	EX DE, HL
+	ADD HL, BC
+	EX DE, HL
+	CALL Print_UDG8
+	POP HL
+	RET
 
 ; Print a UDG (Single Height)
 ; DE - Character data

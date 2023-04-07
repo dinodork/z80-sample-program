@@ -82,39 +82,39 @@ Demo_Sprite_Logic_2
 
 Interrupt:
 	DI
-			PUSH AF
-			PUSH BC
-			PUSH DE
-			PUSH HL
-			PUSH IX
-			EXX
-			EX AF,AF'
-			PUSH AF
-			PUSH BC
-			PUSH DE
-			PUSH HL
-			PUSH IY
-			LD A,2
-			OUT (254),A
-			LD HL, Robot_frames
-			CALL Render_Sprites
-			CALL Handle_Sprites
-			LD A,7
-			OUT (254),A
-			POP IY
-			POP HL
-			POP DE
-			POP BC
-			POP AF
-			EXX
-			EX AF,AF'
-			POP IX
-			POP HL
-			POP DE
-			POP BC
-			POP AF
-			EI
-			RET
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
+	PUSH IX
+	EXX
+	EX AF,AF'
+	PUSH AF
+	PUSH BC
+	PUSH DE
+	PUSH HL
+	PUSH IY
+	LD A,2
+	OUT (254),A
+	LD HL, Robot_frames
+	CALL Render_Sprites
+	CALL Handle_Sprites
+	LD A,7
+	OUT (254),A
+	POP IY
+	POP HL
+	POP DE
+	POP BC
+	POP AF
+	EXX
+	EX AF,AF'
+	POP IX
+	POP HL
+	POP DE
+	POP BC
+	POP AF
+	EI
+	RET
 
 Text_Scores:		DB 0,0,"Demo",0xFE
 			DB 9,0,"Score 00000000",0xFE

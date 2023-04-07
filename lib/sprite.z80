@@ -40,22 +40,23 @@ Handle_Sprites_3:	LD DE,Sprite_Data_Block_Size		; Go to next sprite data block
 ; This routine renders the sprites
 ; It's a bit of a work-in-progress but clears each sprite in turn before drawing it in the new position
 ; HL = Address of sprite definition table
-;
 Render_Sprites:
 	LD (Render_Sprites_SM1 + 1), HL		; Store sprite definition table for later...
 	LD IX, Sprite_Data
 	LD B, Sprite_Max
-Render_Sprites_1:	LD A,(IX+Sprite_Logic+1)
+Render_Sprites_1:
+	LD A, (IX + Sprite_Logic + 1)
 	AND A
-	JR Z,Render_Sprites_2
+	JR Z, Render_Sprites_2
 	PUSH BC
-	LD B,(IX+Sprite_Y_Old)
-	LD C,(IX+Sprite_X_Old)
+	LD B, (IX + Sprite_Y_Old)
+	LD C, (IX + Sprite_X_Old)
 	CALL Clear_Sprite
-	LD B,(IX+Sprite_Y)
-	LD C,(IX+Sprite_X)
+	LD B, (IX + Sprite_Y)
+	LD C, (IX + Sprite_X)
 
-Render_Sprites_SM1:	LD DE,0
+Render_Sprites_SM1:
+	LD DE, 0
 	CALL Render_Sprite
 	POP BC
 Render_Sprites_2:
@@ -117,7 +118,7 @@ Clear_Sprite:		CALL Get_Pixel_Address	; This routine is in output.asm
 	LD B,16			; Height of sprite, in pixels
 Clear_Sprite_1		XOR A			; Clear A
 	LD (HL),A		; Write 3 0's to line
-	INC L			
+	INC L
 	LD (HL),A
 	INC L
 	LD (HL),A
@@ -127,7 +128,7 @@ Clear_Sprite_1		XOR A			; Clear A
 Clear_Sprite_2:
 	DJNZ Clear_Sprite_1
 	RET
-			
+
 Sprite_Image:	EQU 0x00
 Sprite_X:		EQU 0x01
 Sprite_Y:		EQU 0x02
