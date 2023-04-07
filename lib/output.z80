@@ -71,9 +71,9 @@ Print_String_0:		LD A,(IX)			; Fetch the character to print
 			RET
 
 ; Get screen address
+; Returns address in HL
 ; H = Y character position
 ; L = X character position
-; Returns address in HL
 ;
 Get_Char_Address:	LD A,H
 			AND %00000111
@@ -187,11 +187,12 @@ Print_BCD:		PUSH AF				; Store the value
 			INC L				; Move right one space
 			RET
 
-; Print a single character out to an X/Y position
-;  A: Character to print
-;  C: X Coordinate
-;  B: Y Coordinate
-; DE: Address of character set
+; Prints a single character out to a column and row,
+; starting from the top left corner.
+;   A:  Character to print
+;   H:  Column
+;   L:  Row
+;   DE: Address of character set
 ;
 Print_Char_At:		PUSH AF
 			CALL Get_Char_Address
