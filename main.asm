@@ -66,7 +66,7 @@ jqqw
 	LD A, 38h
 	CALL Clear_Screen
 	LD IX, Text_Scores
-	CALL Print_String
+	CALL Print_String_old
 	CALL Initialise_Sprites
 	LD HL, Interrupt
 	LD IX, 0xFFF0
@@ -81,8 +81,74 @@ jqqw
 
 LOOP:
 	HALT
-	CALL Read_Keyboard
+	CALL Handle_Controls
 	JR LOOP
+
+Handle_Controls:
+    LD HL, Input_Custom
+    CALL Read_Controls
+
+; Check_Up:
+    PUSH AF
+    AND 10h
+    CP 0
+    JR Z, Check_Down
+
+    LD IX, Up_text
+	LD h, 10
+	LD l, 10
+	CALL Print_String
+    JP Check_Left
+Check_Down:
+    POP AF
+    PUSH AF
+    AND 8
+    CP 0
+    JR Z, Check_Left
+
+    LD IX, Down_text
+	LD h, 10
+	LD l, 10
+	CALL Print_String
+
+Check_Left:
+    POP AF
+    PUSH AF
+    AND 4
+    CP 0
+    JR Z, Check_Right
+
+    LD IX, Left_text
+	LD h, 11
+	LD l, 10
+	CALL Print_String
+    JP Check_Fire
+Check_Right:
+    POP AF
+    PUSH AF
+    AND 2
+    CP 0
+    JR Z, Check_Fire
+
+    LD IX, Right_text
+	LD h, 11
+	LD l, 10
+	CALL Print_String
+
+Check_Fire:
+Keycheck_Done:
+    POP AF
+    RET
+
+
+Up_text:
+	DB "Up   ", 0xFE
+Down_text:
+	DB "Down ", 0xFE
+Left_text:
+	DB "Left ", 0xFE
+Right_text:
+	DB "Right", 0xFE
 
 ;===========================================================================
 ; Stack.

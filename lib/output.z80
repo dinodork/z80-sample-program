@@ -38,43 +38,59 @@ Clear_Screen:
 ;  B: Height
 ;
 Fill_Attr:		LD DE,32
-1:			PUSH HL
-			PUSH BC
-2:			LD (HL), A
-			INC L
-			DEC C
-			JR NZ, 2B
-			POP BC
-			POP HL
-			ADD HL,DE
-			DJNZ 1B
-			RET
+1:	PUSH HL
+	PUSH BC
+2:	LD (HL), A
+	INC L
+	DEC C
+	JR NZ, 2B
+	POP BC
+	POP HL
+	ADD HL,DE
+	DJNZ 1B
+	RET
 
-; Print String Data
+; Prints a string
+;   IX: Address of string
+;   H:  Column
+;   L:  Row
+;   DE: Address of character set
+Print_String:
+	CALL Get_Char_Address	; Calculate the screen address (in DE)
+	LD A, (IX)				; Fetch the character to print
+	CP 0xFE					; Compare with 0xFE
+	JR Z, Print_String_Done	; If it is equal to 0xFE then return
+	CALL Print_Char			; Print the character
+	INC IX					; Next character
+	INC L					; Go to the next screen address
+	JR Print_String
+Print_String_Done:
+	RET
 ; First two bytes of string contain X and Y char position, then the string
 ; Individual strings are terminated with 0xFE
 ; End of data is terminated with 0xFF
-; IX: Address of string
 ;
-Print_String:		LD L,(IX+0)			; Fetch the X coordinate
-			INC IX				; Increase HL to the next memory location
-			LD H,(IX+0)			; Fetch the Y coordinate
-			INC IX				; Increase HL to the next memory location
-			CALL Get_Char_Address		; Calculate the screen address (in DE)
-Print_String_0:		LD A,(IX)			; Fetch the character to print
-			INC IX				; Increase HL to the next character
-			CP 0xFE				; Compare with 0xFE
-			JR Z,Print_String		; If it is equal to 0xFE then loop back to print next string
-			RET NC				; If it is greater or equal to (carry bit set) then
-			CALL Print_Char			; Print the character
-			INC L				; Go to the next screen address
-			JR Print_String_0		; Loop back to print next character
-			RET
+Print_String_old:
+	LD L, (IX+0)	; Fetch the X coordinate
+	INC IX			; Increase HL to the next memory location
+	LD H, (IX+0)	; Fetch the Y coordinate
+	INC IX			; Increase HL to the next memory location
+	CALL Get_Char_Address	; Calculate the screen address (in DE)
+Print_String_0:
+	LD A,(IX)	; Fetch the character to print
+	INC IX		; Increase HL to the next character
+	CP 0xFE		; Compare with 0xFE
+	JR Z,Print_String_old		; If it is equal to 0xFE then loop back to print next string
+	RET NC		; If it is greater or equal to (carry bit set) then
+	CALL Print_Char	; Print the character
+	INC L		; Go to the next screen address
+	JR Print_String_0		; Loop back to print next character
+	RET
 
 ; Get screen address
-; Returns address in HL
 ; H = Y character position
 ; L = X character position
+; Returns address in HL
 ;
 Get_Char_Address:
 	LD A, H
