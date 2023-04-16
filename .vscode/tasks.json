@@ -21,7 +21,8 @@
             "label": "generate asm from graphics",
             "type": "shell",
             "osx": {
-                "command": "python3 scripts/export_to_bin.py",
+                "command": "scripts/export_to_bin.py",
+                "args": ["graphics/robot.udg"],
             },
             "group": {
                 "kind": "build",
