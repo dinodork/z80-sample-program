@@ -19,12 +19,13 @@
 			include "../lib/sprite.z80"
 			include "../lib/math.z80"
 			; to do: Stop hardcoding this
+			include "../build/graphics/bubble2x2.asm"
 			include "../build/graphics/robot.asm"
 
 Initialise_Sprites:
 	LD IX, Sprite_Data
 	LD B, Sprite_Max
-Initialise_Sprites_1:
+Initialise_Sprites_Loop:
 	CALL RND16
 	LD A, H
 	AND 0x7F
@@ -40,7 +41,7 @@ Initialise_Sprites_1:
 	LD (IX + Sprite_Speed_X), 1
 	LD DE, Sprite_Data_Block_Size
 	ADD IX, DE
-	DJNZ Initialise_Sprites_1
+	DJNZ Initialise_Sprites_Loop
 	RET
 
 ; Move the sprite horizontally
@@ -120,7 +121,7 @@ Text_Scores:		DB 0,0,"Demo",0xFE
 			DB 9,0,"Score 00000000",0xFE
 			DB 24,0,"Lives 0",0xFF
 
-Robot_frames:  DW Robot, Robot, Robot, Robot, Robot, Robot, Robot, Robot
+Robot_frames:  DW Bubble2x2, Robot, Robot, Robot, Robot, Robot, Robot, Robot
 Sprite_Bubble:	DW 	Sprite_Bubble_0, Sprite_Bubble_0,		Sprite_Bubble_2, Sprite_Bubble_2,		Sprite_Bubble_4, Sprite_Bubble_4,		Sprite_Bubble_6, Sprite_Bubble_6
 
 Sprite_Bubble_0:	DB %00000000,%00000000,%00000000

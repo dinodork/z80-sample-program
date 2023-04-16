@@ -22,7 +22,10 @@
             "type": "shell",
             "osx": {
                 "command": "scripts/export_to_bin.py",
-                "args": ["graphics/robot.udg"],
+                "args": [
+                    "graphics/bubble2x2.udg",
+                    "graphics/robot.udg",
+                ],
             },
             "group": {
                 "kind": "build",
