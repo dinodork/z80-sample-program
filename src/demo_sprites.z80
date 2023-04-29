@@ -24,7 +24,24 @@
 
 Initialise_Sprites:
 	LD IX, Sprite_Data
-	LD B, Sprite_Max
+
+; Initialize player sprite
+	CALL RND16
+	LD A, H
+	AND 0x7F
+	ADD A, 16
+	LD (IX + Sprite_X), L
+	LD (IX + Sprite_X_Old), L
+	LD (IX + Sprite_Y), A
+	LD (IX + Sprite_Y_Old), A
+	LD (IX + Sprite_Logic), 0
+	LD (IX + Sprite_Logic + 1), 0
+	LD (IX + Sprite_Speed_Y), 1
+	LD (IX + Sprite_Speed_X), 1
+
+; Initialize the rest
+	LD IX, Sprite_Data + Sprite_Data_Block_Size
+	LD B, Sprite_Max - 1
 Initialise_Sprites_Loop:
 	CALL RND16
 	LD A, H

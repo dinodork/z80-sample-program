@@ -52,9 +52,6 @@ Render_Sprites:
 	LD IX, Sprite_Data
 	LD B, Sprite_Max
 Render_Sprites_Loop:
-	LD A, (IX + Sprite_Logic + 1)
-	AND A
-	JR Z, Render_Sprites_2
 	PUSH BC
 	LD B, (IX + Sprite_Y_Old)
 	LD C, (IX + Sprite_X_Old)
@@ -151,6 +148,6 @@ Sprite_Speed_Y:	EQU 0x0A	; Downward speed
 Sprite_Speed_X:	EQU 0x0B	; Rightward speed
 
 Sprite_Data_Block_Size:	EQU 0x0C
-Sprite_Max:		EQU 0x0D
+Sprite_Max:		EQU 0x05
 
 Sprite_Data:		DEFS (Sprite_Max * Sprite_Data_Block_Size), 0

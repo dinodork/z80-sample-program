@@ -118,6 +118,15 @@ Check_Left:
     CP 0
     JR Z, Check_Right
 
+    ; Move left
+    LD IX, Sprite_Data
+    DI
+    LD C, (IX + Sprite_X)
+    LD (IX + Sprite_X_Old), C
+    DEC C
+    LD (IX + Sprite_X), C
+    EI
+
     LD IX, Left_text
 	LD h, 11
 	LD l, 10
@@ -134,6 +143,13 @@ Check_Right:
 	LD h, 11
 	LD l, 10
 	CALL Print_String
+
+    ; Move right
+    LD IX, Sprite_Data
+    LD C, (IX + Sprite_X)
+    LD (IX + Sprite_X_Old), C
+    INC C
+    LD (IX + Sprite_X), C
 
 Check_Fire:
 Keycheck_Done:
