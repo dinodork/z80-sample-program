@@ -17,7 +17,7 @@
             },
             "sjasmplus": [
                 {
-                 "path": "z80-sample-program.sld"
+                    "path": "z80-sample-program.sld"
                 }
             ],
             "history": {
@@ -26,16 +26,15 @@
                 "codeCoverageEnabled": true
             },
             "startAutomatically": false,
-            "commandsAfterLaunch": [
-            ],
+            "commandsAfterLaunch": [],
             "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.sna",
             "smallValuesMaximum": 513,
-            "tmpDir": ".tmp"
+            "tmpDir": ".tmp",
+            "preLaunchTask": "make (sjasmplus)"
         },
-
         {
             "type": "dezog",
             "request": "launch",
@@ -51,8 +50,7 @@
                 "spotCount": 10
             },
             "startAutomatically": false,
-            "commandsAfterLaunch": [
-            ],
+            "commandsAfterLaunch": [],
             "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
@@ -60,7 +58,6 @@
             "smallValuesMaximum": 513,
             "tmpDir": ".tmp"
         },
-
         {
             "type": "dezog",
             "request": "launch",
@@ -76,8 +73,7 @@
                 "spotCount": 10,
             },
             "startAutomatically": false,
-            "commandsAfterLaunch": [
-            ],
+            "commandsAfterLaunch": [],
             "rootFolder": "${config:buildDirectory}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
@@ -85,7 +81,6 @@
             "smallValuesMaximum": 513,
             "tmpDir": ".tmp"
         },
-
         {
             "type": "dezog",
             "request": "launch",
@@ -112,7 +107,6 @@
             "smallValuesMaximum": 513,
             "tmpDir": ".tmp"
         },
-
         {
             "type": "dezog",
             "request": "launch",
@@ -134,7 +128,6 @@
             "smallValuesMaximum": 513,
             "tmpDir": ".tmp"
         },
-
         {
             "type": "dezog",
             "request": "launch",
@@ -158,6 +151,5 @@
             "rootFolder": "${config:buildDirectory}",
             "load": "z80-sample-program.nex"
         }
-
     ]
 }

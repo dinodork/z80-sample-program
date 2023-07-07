@@ -31,6 +31,9 @@
                 "kind": "build",
                 "isDefault": false
             },
+            "dependsOn": [
+                "create build directory",
+            ]
         },
         {
             "label": "make (sjasmplus)",
@@ -58,8 +61,8 @@
                 "isDefault": true
             },
             "dependsOn": [
+                "create build directory",
                 "generate asm from graphics",
-                "create build directory"
             ]
         },
         {
