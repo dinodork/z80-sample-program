@@ -1,56 +1,48 @@
 #!/usr/bin/python3
 
-import getopt
 import sys
 import os
 import errno
-
-
-def usage():
-    print("usage")
+import argparse
 
 
 def main():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "w:h:o:", ["help", "output="])
-    except getopt.GetoptError as err:
-        # print help information and exit:
-        print(err)  # will print something like "option -a not recognized"
-        usage()
-        sys.exit(2)
 
-    print("args are ")
-    print(args)
-    w = 2
-    h = 2
-    indent = '  '
+    parser = argparse.ArgumentParser(
+        description="Exports .fnt or .udg data to Z80 assembler.")
 
-    for udg_file in args:
-        with open(udg_file, mode='rb') as file:
-            fileContent = file.read()
+    parser.add_argument("infiles", nargs='*', type=argparse.FileType('rb'),
+                        default=sys.stdin)
+    parser.add_argument(
+        "-W", "--width", help="Width in bytes of all sprites.", default=2)
+    parser.add_argument(
+        "-H", "--height", help="Height in bytes of all sprites.", default=2)
+    parser.add_argument(
+        "-i", "--indent", help="Number of spaces to indent.", type=int, default=2)
 
-            binlst = [bin(c)[2:].rjust(8, '0') for c in fileContent]
+    args = parser.parse_args()
 
-        asm_path = "build/" + udg_file.replace(".udg", ".asm")
+    for infile in args.infiles:
+        fileContent = infile.read()
+        binlst = [bin(c)[2:].rjust(8, '0') for c in fileContent]
+        asm_path = "build/" + infile.name.replace(".udg", ".asm")
         try:
             os.makedirs(os.path.dirname(asm_path))
         except OSError as exception:
-
             if exception.errno != errno.EEXIST:
                 raise
 
-        asm_file = "build/" + udg_file.replace(".udg", ".asm")
-        print("asm_file '" + asm_file + "'")
-        with open(asm_file, "w") as f:
-            label = os.path.splitext(os.path.basename(udg_file))[0].capitalize()
+        with open(asm_path, "w") as f:
+            label = os.path.splitext(os.path.basename(asm_path))[
+                0].capitalize()
             print(label + ":", file=f)
-            for i in range(h):
+            for i in range(args.height):
                 for j in range(8):
                     row = []
-                    for k in range(w):
+                    for k in range(args.width):
                         row.append("%{byte}".format(
-                            byte=binlst[i * w * 8 + j + k * 8]))
-                    print(indent+"DB ", ", ".join(row), file=f)
+                            byte=binlst[i * args.width * 8 + j + k * 8]))
+                    print(" " * args.indent + "DB ", ", ".join(row), file=f)
 
 
 if __name__ == "__main__":
