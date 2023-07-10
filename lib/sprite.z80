@@ -75,10 +75,59 @@ Render_Sprites_2:
 ; DE = Address of sprite table (8 words; one word per pre-shifted sprite definition)
 ;
 Render_Sprite:
-	CALL Get_Pixel_Address	; This routine is in output.asm
+	CALL Get_Pixel_Address
 	PUSH HL			; Store screen address temporarily
+	; We now have the bit offset (X bit coordinate % 8) in A,
+	; this value stays constant throughout the rendering of this
+	; sprite, so we optimize it by using self-modifying code.
+	; The loop to rotate the bits is unrolled below, we jump to
+	; the address after the last RRA - A, which will rotate the
+	; bitmap A steps. The address to jump to is in the
+	; JP Rotate_Into_Pixel_Position instruction, but we overwrite
+	; the value from here.
+	LD HL, After_Rotate_Into_Pixel_Position_SM
+	LD C, A
+	LD B, 0
+	SUB HL, BC
+	LD (Rotate_Into_Pixel_Position_SM + 1), HL
+
+;;; Make a mask
+;;; E.g. 1 => 01111111
+;;;      2 => 00111111
+;;;      ...
+;;;      7 => 00000001
+;;;
+	LD HL, Make_mask_0
+	ADD A, A
+	LD C, A
+	LD B, 0
+	ADD HL, BC
+	LD (Make_mask_SM1 + 1), HL
+	LD A, 0
+Make_mask_SM1:
+	JP 0xDEAD
+Make_mask_0:
+	OR 0x80
+	OR 0x40
+	OR 0x20
+	OR 0x10
+	OR 0x08
+	OR 0x04
+	OR 0x02
+	OR 0x01
+After_Make_Mask:
+Mask_Made:
+	; The mask is done
+	; Write it to the self-modifying code.
+	; This will be used to clear bits that were wrapped in the rotations.
+	LD (Clear_Rotated_Pixels_SM + 1), A
+	; The inverse mask is used for transferring the wrapped bits to the octet
+	; on the right.
+	XOR 0xFF
+	LD (Transfer_Bits_SM + 1), A
+
 	LD H, 0			; Multiply pixel shift by 2
-	LD L, A
+	LD L, 0 ;A
 	ADD HL, HL		; I think this is quicker than shifting L and H
 	ADD HL, DE		; Add base address of sprite table
 	LD E, (HL)		; Get sprite definition address
@@ -91,27 +140,45 @@ Render_Sprite:
 ; DE = Address of first byte of sprite row
 ; L = Offset from start of screen memory?
 Render_Sprite_Row:
+	PUSH BC
+	LD B, 2         ; Sprite width in octets
+Render_Sprite_Octet:
 	LD A, (DE)		; Fetch sprite definition
+
+Rotate_Into_Pixel_Position_SM:
+	JP Write_Back	; Write_back replaced by actual jump address by modifying code, see above. It is
+					; modified to After_Rotate_Into_Pixel_Position_SM - n where 0 <= n <= 7.					;
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+
+After_Rotate_Into_Pixel_Position_SM:
+	LD C, A
+Clear_Rotated_Pixels_SM:
+	AND 0xFF
+
+Write_Back:
+
 	OR (HL)			; OR with contents of screen
 	LD (HL), A		; Write back to screen
 	INC DE			; Next byte of sprite definition
 	INC L			; Next byte of screen memory
 
-	; LD A, (DE)		; Fetch and write again...
-	; OR (HL)
-	; LD (HL), A
-	; INC DE
-	; INC L
-
-	LD A, (DE)		; And again...
-	OR (HL)
+	LD A, C
+Transfer_Bits_SM:
+	AND 0x00
 	LD (HL), A
-	INC DE
-
+	DJNZ Render_Sprite_Octet
 	DEC L			; Go back to original screen address
-;	DEC L
+	DEC L			; Go back to original screen address
+	POP BC
 	CALL Pixel_Address_Down
-Render_Sprite_2:	DJNZ Render_Sprite_Row
+Render_Sprite_2:
+	DJNZ Render_Sprite_Row
 	RET
 
 ; Clear a single sprite
@@ -148,6 +215,6 @@ Sprite_Speed_Y:	EQU 0x0A	; Downward speed
 Sprite_Speed_X:	EQU 0x0B	; Rightward speed
 
 Sprite_Data_Block_Size:	EQU 0x0C
-Sprite_Max:		EQU 0x05
+Sprite_Max:		EQU 0x02
 
 Sprite_Data:		DEFS (Sprite_Max * Sprite_Data_Block_Size), 0

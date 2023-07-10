@@ -138,7 +138,7 @@ Text_Scores:		DB 0,0,"Demo",0xFE
 			DB 9,0,"Score 00000000",0xFE
 			DB 24,0,"Lives 0",0xFF
 
-Robot_frames:  DW Bubble2x2, Robot, Robot, Robot, Robot, Robot, Robot, Robot
+Robot_frames:  DW Robot, Robot, Robot, Robot, Robot, Robot, Robot, Robot
 Sprite_Bubble:	DW 	Sprite_Bubble_0, Sprite_Bubble_0,		Sprite_Bubble_2, Sprite_Bubble_2,		Sprite_Bubble_4, Sprite_Bubble_4,		Sprite_Bubble_6, Sprite_Bubble_6
 
 Sprite_Bubble_0:	DB %00000000,%00000000,%00000000
