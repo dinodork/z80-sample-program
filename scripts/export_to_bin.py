@@ -4,6 +4,7 @@ import sys
 import os
 import errno
 import argparse
+from math import floor
 
 
 def main():
@@ -11,38 +12,45 @@ def main():
     parser = argparse.ArgumentParser(
         description="Exports .fnt or .udg data to Z80 assembler.")
 
-    parser.add_argument("infiles", nargs='*', type=argparse.FileType('rb'),
+    parser.add_argument("infile", type=argparse.FileType('rb'),
                         default=sys.stdin)
+    parser.add_argument("-o", "--outfile", type=argparse.FileType('w'),
+                        default=sys.stdout)
     parser.add_argument(
-        "-W", "--width", help="Width in bytes of all sprites.", default=2)
+        "-W", "--width", help="Width in bytes of all sprites.", type=int, default=2)
     parser.add_argument(
-        "-H", "--height", help="Height in bytes of all sprites.", default=2)
+        "-H", "--height", help="Height in octets of all sprites.", type=int,   default=2)
     parser.add_argument(
         "-i", "--indent", help="Number of spaces to indent.", type=int, default=2)
+    parser.add_argument(
+        "-f", "--frames",
+        help="Number of frames in the sprite, or characters in a font.",
+        type=int, default=1
+    )
 
     args = parser.parse_args()
 
-    for infile in args.infiles:
-        fileContent = infile.read()
-        binlst = [bin(c)[2:].rjust(8, '0') for c in fileContent]
-        asm_path = "build/" + infile.name.replace(".udg", ".asm")
-        try:
-            os.makedirs(os.path.dirname(asm_path))
-        except OSError as exception:
-            if exception.errno != errno.EEXIST:
-                raise
+    label = os.path.splitext(os.path.basename(args.infile.name))[
+        0].capitalize()
 
-        with open(asm_path, "w") as f:
-            label = os.path.splitext(os.path.basename(asm_path))[
-                0].capitalize()
-            print(label + ":", file=f)
-            for i in range(args.height):
-                for j in range(8):
-                    row = []
-                    for k in range(args.width):
-                        row.append("%{byte}".format(
-                            byte=binlst[i * args.width * 8 + j + k * 8]))
-                    print(" " * args.indent + "DB ", ", ".join(row), file=f)
+    n_frames = floor(os.path.getsize(args.infile.name) /
+                     (args.width * 8 * args.height))
+
+    for frameno in range(1, n_frames):
+        print(label + "_" + str(frameno) + ":", file=args.outfile)
+        for chunkno in range(args.height):
+            chunk = args.infile.read(8 * args.width)
+            if len(chunk) < 8 * args.width:
+                print("Warning: file ends in the middle of a sprite",
+                      file=sys.stderr)
+                exit(0)
+            for i in range(0, 8):
+                print(" " * args.indent + "DB " +
+                      " ", file=args.outfile, end='')
+                print(", ".join(["%" + bin(chunk[byte * 8 + i])[2:].rjust(8,
+                      '0') for byte in range(args.width)]), file=args.outfile)
+        print(file=args.outfile)
+        frameno += 1
 
 
 if __name__ == "__main__":

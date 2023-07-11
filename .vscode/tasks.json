@@ -21,11 +21,8 @@
             "label": "generate asm from graphics",
             "type": "shell",
             "osx": {
-                "command": "scripts/export_to_bin.py",
-                "args": [
-                    "graphics/bubble2x2.udg",
-                    "graphics/robot.udg",
-                ],
+                "command": "scripts/generate_asm.sh",
+                "args": ["${config:buildDirectory}", "graphics"]
             },
             "group": {
                 "kind": "build",
