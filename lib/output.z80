@@ -14,6 +14,9 @@
 ;		Moved Clear_Screen into here (originally in screen_buffer.z80)
 ;		All output routines refactored to use HL for screen address
 ;		Added Fill_Attr routine
+
+	include "build/graphics/npm_large.asm"
+
 ;
 
 ; Simple clear-screen routine
@@ -229,17 +232,23 @@ Print_Char_At:
 ; No SM code here - needs to be re-enterent if called on interrupt
 ;
 Print_Char:
-	LD DE, 0x3C00	; Address of character set in ROM
+	LD DE, Npm_large_1 - 256
 	PUSH HL
-	LD B, 0		; Get index into character set
+
+	; Get index into character set, by multiplying by 8
+	LD B, 0
 	LD C, A
+
+	; Multiply BC by 8
 	DUP 3
 	SLA C
 	RL B
 	EDUP
+
 	EX DE, HL
 	ADD HL, BC
 	EX DE, HL
+
 	CALL Print_UDG8
 	POP HL
 	RET
