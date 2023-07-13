@@ -11,6 +11,8 @@ Sprite_Speed_Y:	EQU 0x0A	; Downward speed
 Sprite_Speed_X:	EQU 0x0B	; Rightward speed
 
 Sprite_Data_Block_Size:	EQU 0x0C
-Sprite_Max:		EQU 0x02
+Sprite_Data_Block_Array_Size:		EQU 0x02
 
-Sprite_Data:		DEFS (Sprite_Max * Sprite_Data_Block_Size), 0
+Player_Data_block:
+Sprite_Data_Block_Array:
+    DEFS (Sprite_Data_Block_Array_Size * Sprite_Data_Block_Size), 0

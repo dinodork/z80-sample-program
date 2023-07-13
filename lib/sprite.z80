@@ -17,8 +17,8 @@
 	include "sprite_data_block.z80"
 
 Handle_Sprites:
-	LD IX, Sprite_Data      ; The sprite data block
-	LD B, Sprite_Max	; The number of sprites to handle
+	LD IX, Sprite_Data_Block_Array      ; The sprite data block
+	LD B, Sprite_Data_Block_Array_Size	; The number of sprites to handle
 Handle_Sprites_1:
 	LD A, (IX + Sprite_Logic + 1)	; Get the high address of the handler routine
 	AND A						; If it is zero,
@@ -52,8 +52,8 @@ Render_Sprites:
 	; Store it as the operand inside the LD DE instruction.
 	; The opcode is a single byte, hence we can write at the next byte.
 	LD (Render_Sprites_SM1 + 1), HL
-	LD IX, Sprite_Data
-	LD B, Sprite_Max
+	LD IX, Sprite_Data_Block_Array
+	LD B, Sprite_Data_Block_Array_Size
 Render_Sprites_Loop:
 	PUSH BC
 	LD B, (IX + Sprite_Y_Old)
@@ -72,11 +72,10 @@ Render_Sprites_2:
 	DJNZ Render_Sprites_Loop
 	RET
 
-; This routine draws a single sprite; again, work in progress. No off-screen clipping or masking yet
 ; B = Y pixel position
 ; C = X pixel position
 ; DE = Address of sprite table (8 words; one word per pre-shifted sprite definition)
-;
+; IX = Address of sprite data block
 Render_Sprite:
 	CALL Get_Pixel_Address
 	PUSH HL			; Store screen address temporarily
@@ -129,13 +128,23 @@ Mask_Made:
 	XOR 0xFF
 	LD (Transfer_Bits_SM + 1), A
 
-	LD H, 0			; Multiply pixel shift by 2
-	LD L, 0 ;A
-	ADD HL, HL		; I think this is quicker than shifting L and H
-	ADD HL, DE		; Add base address of sprite table
-	LD E, (HL)		; Get sprite definition address
-	INC HL
-	LD D,(HL)
+	; DE is a pointer to an array of pointers to frames
+	; In C parlance, DE is of type Sprite**
+	; We want DE to contain DE[sprite_data_block.Sprite_Image], which would be
+	; of type Sprite*, to continue the C analogy
+
+	; Dereference DE, this would be LD DE, (DE), if that instruction existed.
+    LD HL, DE
+
+	LD D, 0
+	LD E, (IX)
+	SLA E
+	ADD HL, DE
+
+    LD E, (HL)
+    INC HL
+    LD D, (HL)
+
 	POP HL			; Get screen address back
 	LD B, 16		; Height of sprite, in pixels
 

@@ -44,6 +44,7 @@ screen_top: defb    0   ; WPMEMx
     ; As this is a very short program and for simplicity the
     ; unit tests and the main program are assembled in the same binary.
     include "unit_tests.asm"
+    include "graphics/frames.asm"
 
 
 ;===========================================================================
@@ -63,7 +64,7 @@ main:
 jqqw
 	DI
 	LD SP, Stack_Top
-	LD A, 38h
+	LD A, 0x47
 	CALL Clear_Screen
 	LD IX, Text_Scores
 	CALL Print_String_old
@@ -95,8 +96,8 @@ Handle_Controls:
     JR Z, Check_Down
 
     LD IX, Up_text
-	LD h, 10
-	LD l, 10
+	LD H, 10
+	LD L, 10
 	CALL Print_String
     JP Check_Left
 Check_Down:
@@ -107,8 +108,8 @@ Check_Down:
     JR Z, Check_Left
 
     LD IX, Down_text
-	LD h, 10
-	LD l, 10
+	LD H, 10
+	LD L, 10
 	CALL Print_String
 
 Check_Left:
@@ -119,17 +120,18 @@ Check_Left:
     JR Z, Check_Right
 
     ; Move left
-    LD IX, Sprite_Data
+    LD IX, Sprite_Data_Block_Array
     DI
     LD C, (IX + Sprite_X)
     LD (IX + Sprite_X_Old), C
     DEC C
     LD (IX + Sprite_X), C
+    LD (IX + Sprite_Image), Robot_Left
     EI
 
     LD IX, Left_text
-	LD h, 11
-	LD l, 10
+	LD H, 11
+	LD L, 10
 	CALL Print_String
     JP Check_Fire
 Check_Right:
@@ -145,11 +147,14 @@ Check_Right:
 	CALL Print_String
 
     ; Move right
-    LD IX, Sprite_Data
+    LD IX, Player_Data_block
     LD C, (IX + Sprite_X)
     LD (IX + Sprite_X_Old), C
     INC C
     LD (IX + Sprite_X), C
+    LD (IX + Sprite_Image), Robot_Right
+
+
 
 Check_Fire:
 Keycheck_Done:
