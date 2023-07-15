@@ -126,7 +126,14 @@ Check_Left:
     LD (IX + Sprite_X_Old), C
     DEC C
     LD (IX + Sprite_X), C
-    LD (IX + Sprite_Image), Robot_Left
+
+    ; Update frame
+    LD A, (IX)
+    CP 0
+    JP Z, Set_left_turn_image
+    DEC A
+Set_left_turn_image:
+    LD (IX + Sprite_Image), A
     EI
 
     LD IX, Left_text
@@ -152,7 +159,7 @@ Check_Right:
     LD (IX + Sprite_X_Old), C
     INC C
     LD (IX + Sprite_X), C
-    LD (IX + Sprite_Image), Robot_Right
+    LD (IX + Sprite_Image), Player_Right
 
 
 

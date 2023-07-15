@@ -20,7 +20,7 @@
 			include "../lib/math.z80"
 			; to do: Stop hardcoding this
 			include "../build/graphics/bubble2x2.asm"
-			include "../build/graphics/robot.asm"
+			include "../build/graphics/player.asm"
 
 Initialise_Sprites:
 	LD IX, Sprite_Data_Block_Array
@@ -30,7 +30,7 @@ Initialise_Sprites:
 	LD A, H
 	AND 0x7F
 	ADD A, 16
-	LD (IX + Sprite_Image), Robot_Front
+	LD (IX + Sprite_Image), Player_Center
 	LD (IX + Sprite_X), L
 	LD (IX + Sprite_X_Old), L
 	LD (IX + Sprite_Y), A
@@ -115,7 +115,7 @@ Interrupt:
 	PUSH IY
 	LD A,2
 	OUT (254),A
-	LD HL, Robot_frames
+	LD HL, Player_Frames
 	CALL Render_Sprites
 	CALL Handle_Sprites
 	LD A,7
@@ -139,7 +139,6 @@ Text_Scores:		DB 0,0,"Demo",0xFE
 			DB 9,0,"Score 00000000",0xFE
 			DB 24,0,"Lives 0",0xFF
 
-Robot_frames:DW Robot_1, Robot_2, Robot_1, Robot_1, Robot_1, Robot_1, Robot_1, Robot_1
 Sprite_Bubble:	DW 	Sprite_Bubble_0, Sprite_Bubble_0,		Sprite_Bubble_2, Sprite_Bubble_2,		Sprite_Bubble_4, Sprite_Bubble_4,		Sprite_Bubble_6, Sprite_Bubble_6
 
 Sprite_Bubble_0:	DB %00000000,%00000000,%00000000
