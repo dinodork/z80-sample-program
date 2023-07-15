@@ -129,11 +129,15 @@ Check_Left:
 
     ; Update frame
     LD A, (IX)
-    CP 0
-    JP Z, Set_left_turn_image
-    DEC A
-Set_left_turn_image:
-    LD (IX + Sprite_Image), A
+    CP 0                        ; if (A != 0)
+    JP Z, Reset_Left_Turn_Image
+
+    DEC A                       ;   A--;
+    JP Set_Left_Turn_Image
+Reset_Left_Turn_Image:          ; else
+    LD A, 3                     ;   A = 3;
+Set_Left_Turn_Image:
+    LD (IX + Sprite_Frameno), A   ; sprite_data_block.Sprite_Image = A
     EI
 
     LD IX, Left_text
@@ -148,18 +152,32 @@ Check_Right:
     CP 0
     JR Z, Check_Fire
 
-    LD IX, Right_text
-	LD h, 11
-	LD l, 10
-	CALL Print_String
-
     ; Move right
-    LD IX, Player_Data_block
+    LD IX, Sprite_Data_Block_Array
+    DI
     LD C, (IX + Sprite_X)
     LD (IX + Sprite_X_Old), C
     INC C
     LD (IX + Sprite_X), C
-    LD (IX + Sprite_Image), Player_Right
+
+    ; Update frame
+    LD A, (IX)
+    CP Player_Right_Loop_End        ; if (A != Player_Right_End)
+    JP Z, Reset_Right_Turn_Image
+
+    INC A                           ;   A++;
+    JP Set_Right_Turn_Image
+Reset_Right_Turn_Image:             ; else
+    LD A, Player_Right_Loop_Start   ;   A = Player_Right_Loop_Start;
+Set_Right_Turn_Image:
+    LD (IX + Sprite_Frameno), A   ; sprite_data_block.Sprite_Image = A
+    EI
+
+    LD IX, Right_text
+	LD H, 11
+	LD L, 10
+	CALL Print_String
+
 
 
 

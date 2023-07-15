@@ -30,7 +30,7 @@ Initialise_Sprites:
 	LD A, H
 	AND 0x7F
 	ADD A, 16
-	LD (IX + Sprite_Image), Player_Center
+	LD (IX + Sprite_Frameno), Player_Center
 	LD (IX + Sprite_X), L
 	LD (IX + Sprite_X_Old), L
 	LD (IX + Sprite_Y), A
@@ -48,6 +48,7 @@ Initialise_Sprites_Loop:
 	LD A, H
 	AND 0x7F
 	ADD A, 16
+;	LD (IX + Sprite_Image), Bubble2x2_1
 	LD (IX + Sprite_X), L
 	LD (IX + Sprite_X_Old), L
 	LD (IX + Sprite_Y), A

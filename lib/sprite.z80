@@ -136,9 +136,11 @@ Mask_Made:
 	; Dereference DE, this would be LD DE, (DE), if that instruction existed.
     LD HL, DE
 
+	; Get the index to look up in the array
 	LD D, 0
 	LD E, (IX)
-	SLA E
+	SLA E ; x2
+
 	ADD HL, DE
 
     LD E, (HL)

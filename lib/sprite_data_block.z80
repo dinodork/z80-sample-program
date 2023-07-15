@@ -1,7 +1,7 @@
-Sprite_Image:	EQU 0x00
+Sprite_Frameno:	EQU 0x00
 Sprite_X:		EQU 0x01
 Sprite_Y:		EQU 0x02
-Sprite_w:		EQU 0x03
+Sprite_W:		EQU 0x03
 Sprite_H:		EQU 0x04
 Sprite_Logic:	EQU 0x05
 Sprite_Flags:	EQU 0x07
