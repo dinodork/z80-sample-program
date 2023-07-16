@@ -16,7 +16,11 @@ Player_Right_Loop_End:   EQU 0x08
 ;              ^   |
 ;               \--
 ;              Loop
+Frames_Start:
 Player_Frames:
     DW Player_left_2, Player_left_1, Player_left_2, Player_left_3
     DW Player_center_1
     DW Player_right_1, Player_right_2, Player_right_3, Player_right_2
+
+Bubble_Frames:
+    DW Bubble2x2_1
