@@ -9,8 +9,9 @@ Sprite_X_Old:	EQU 0x08
 Sprite_Y_Old:	EQU 0x09
 Sprite_Speed_Y:	EQU 0x0A	; Downward speed
 Sprite_Speed_X:	EQU 0x0B	; Rightward speed
-
-Sprite_Data_Block_Size:	EQU 0x0C
+Sprite_Attribute: EQU 0x0C
+Sprite_End: EQU 0xD
+Sprite_Data_Block_Size:	EQU Sprite_End
 Sprite_Data_Block_Array_Size:		EQU 0x02
 
 Player_Data_block:

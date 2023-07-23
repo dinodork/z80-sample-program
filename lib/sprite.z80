@@ -77,7 +77,57 @@ Render_Sprites_2:
 ; DE = Address of sprite table (8 words; one word per pre-shifted sprite definition)
 ; IX = Address of sprite data block
 Render_Sprite:
+	PUSH DE
+
+	;;; Part I: Attribute position calculation.
+	LD DE, 0
+	; Get the address attribute block from X, Y pixel position
+
+	; The Y position
+
+	; To get the row (Y position of attribute block), floor-divide by 8, then
+	; multiply with 32 (number of attribute blocks per row) to get offset from
+	; the start of the attribute area in the graphics memory.
+	; 32/8=4, so we need only multiply by 4, which is two bit rotations left,
+	; and round to the nearest multiple of 8, which means clearing the five
+	; rightmost bits.
+	LD E, B
+	DUP 2
+	SLA E
+	RL D
+	EDUP
+	LD A, E
+	AND 0xE0
+	LD E, A
+	LD IY, 16384 + 6144	; Start of video ram
+	ADD IY, DE
+
+	; The X position
+	LD D, 0
+	LD E, C
+	DUP 3
+	SRL E
+	EDUP
+	ADD IY, DE
+
+	; Write it to graphics ram.
+	; To do: Handle the special case when the sprite fits perfectly in two
+	; character block, either horizontally or vertically, or both.
+	LD A, (IX + Sprite_Attribute)
+	LD (IY), A
+	LD (IY + 1), A
+	LD (IY + 2), A
+
+	LD (IY + 32), A
+	LD (IY + 32 + 1), A
+	LD (IY + 32 + 2), A
+
+	LD (IY + 64), A
+	LD (IY + 64 + 1), A
+	LD (IY + 64 + 2), A
+
 	CALL Get_Pixel_Address
+	POP DE
 	PUSH HL			; Store screen address temporarily
 	; We now have the bit offset (X bit coordinate % 8) in A,
 	; this value stays constant throughout the rendering of this
