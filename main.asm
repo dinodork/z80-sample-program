@@ -45,7 +45,7 @@ screen_top: defb    0   ; WPMEMx
     ; unit tests and the main program are assembled in the same binary.
     include "unit_tests.asm"
     include "graphics/frames.asm"
-
+    include "lib/scene.z80"
 
 ;===========================================================================
 ; main routine - the code execution starts here.
@@ -66,9 +66,13 @@ jqqw
 	LD SP, Stack_Top
 	LD A, 0x47
 	CALL Clear_Screen
+
 	LD IX, Text_Scores
     LD DE, Npm_large_1 - 0x100
 	CALL Print_String_old
+
+    CALL Draw_Scene
+
 	CALL Initialise_Sprites
 	LD HL, Interrupt
 	LD IX, 0xFFF0
