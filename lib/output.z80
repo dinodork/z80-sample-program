@@ -55,11 +55,11 @@ Fill_Attr:		LD DE,32
 
 ; Prints a string
 ;   IX: Address of string
-;   H:  Column
-;   L:  Row
+;   H:  Row
+;   L:  Column
 ;   DE: Address of character set
 Print_String:
-	CALL Get_Char_Address	; Calculate the screen address (in DE)
+	CALL Get_Char_Address	; Calculate the screen address (in HL)
 	LD A, (IX)				; Fetch the character to print
 	CP 0xFE					; Compare with 0xFE
 	JR Z, Print_String_Done	; If it is equal to 0xFE then return
@@ -225,17 +225,16 @@ Print_Char_At:
 	CALL Get_Char_Address
 	POP AF		; Fall through to Print_Char
 ;
-; Print a single character out to a screen address
-;  A:  Character to print
-;  HL: Screen address to print character at
-;  DE: Address of character set (if entering at Print_Char_UDG)
-; No SM code here - needs to be re-enterent if called on interrupt
+; Prints a single character to a screen address.
+;   A:  Character to print.
+;   HL: Screen address to print character at.
+;   DE: Address of character set (if entering at Print_Char_UDG.)
+; No SM code here - needs to be reentrant if called on interrupt.
 ;
 Print_Char:
-	LD DE, Npm_large_1 - 256
 	PUSH HL
 
-	; Get index into character set, by multiplying by 8
+	; Get index into character set, by multiplying ascii value by 8.
 	LD B, 0
 	LD C, A
 
@@ -245,22 +244,24 @@ Print_Char:
 	RL B
 	EDUP
 
-	EX DE, HL
-	ADD HL, BC
-	EX DE, HL
+	LD IY, DE
+	ADD IY, BC
 
 	CALL Print_UDG8
 	POP HL
+
 	RET
 
 ; Print a UDG (Single Height)
-; DE - Character data
+; IY - Font data to print
 ; HL - Screen address
 ;
-Print_UDG8:		LD B,8		; Loop counter
-2:	LD A,(DE)	; Get the byte from the ROM into A
-	LD (HL),A	; Stick A onto the screen
-	INC DE		; Goto next byte of character
+Print_UDG8:
+	LD B, 8		; Loop counter
+2:
+	LD A, (IY)
+	LD (HL), A
+	INC IY
 	INC H		; Goto next line on screen
-	DJNZ 2B		; Loop around whilst it is Not Zero (NZ)
+	DJNZ 2B
 	RET

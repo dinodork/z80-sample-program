@@ -67,6 +67,7 @@ jqqw
 	LD A, 0x47
 	CALL Clear_Screen
 	LD IX, Text_Scores
+    LD DE, Npm_large_1 - 0x100
 	CALL Print_String_old
 	CALL Initialise_Sprites
 	LD HL, Interrupt
@@ -98,6 +99,7 @@ Handle_Controls:
     LD IX, Up_text
 	LD H, 10
 	LD L, 10
+    LD DE, Npm_large_1 - 0x100
 	CALL Print_String
     JP Check_Left
 Check_Down:
@@ -110,6 +112,7 @@ Check_Down:
     LD IX, Down_text
 	LD H, 10
 	LD L, 10
+    LD DE, Npm_large_1 - 0x100
 	CALL Print_String
 
 Check_Left:
@@ -143,6 +146,7 @@ Set_Left_Turn_Image:
     LD IX, Left_text
 	LD H, 11
 	LD L, 10
+    LD DE, Npm_large_1 - 0x100
 	CALL Print_String
     JP Check_Fire
 Check_Right:
@@ -176,6 +180,7 @@ Set_Right_Turn_Image:
     LD IX, Right_text
 	LD H, 11
 	LD L, 10
+    LD DE, Npm_large_1 - 0x100
 	CALL Print_String
 
 
