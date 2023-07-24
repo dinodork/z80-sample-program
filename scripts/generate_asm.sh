@@ -12,3 +12,5 @@ scripts/export_to_bin.py -W1 graphics/npm_large.fnt -o build/graphics/npm_large.
 scripts/export_to_bin.py graphics/player_left.udg   -o build/graphics/player.asm -f3
 scripts/export_to_bin.py graphics/player_center.udg -a build/graphics/player.asm -f1
 scripts/export_to_bin.py graphics/player_right.udg  -a build/graphics/player.asm -f3
+
+scripts/export_to_bin.py graphics/stuff.udg -o build/graphics/stuff.asm

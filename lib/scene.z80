@@ -1,10 +1,19 @@
         include "build/graphics/stuff.asm"
-Draw_Scene:
+        include "lib/attribute.z80"
+
+Scene_Draw:
     LD IX, Girder
     LD H, 23
     LD L, 0
     LD DE, Stuff_1 - 0x100
     CALL Print_String
+
+    LD HL, 0x5800 + 32 * 23
+    LD B, 32
+Scene_Color_Loop:
+    LD (HL), Bright | Ink_Magenta
+    INC L
+    DJNZ Scene_Color_Loop
     RET
 
 Girder:

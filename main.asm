@@ -71,7 +71,7 @@ jqqw
     LD DE, Npm_large_1 - 0x100
 	CALL Print_String_old
 
-    CALL Draw_Scene
+    CALL Scene_Draw
 
 	CALL Initialise_Sprites
 	LD HL, Interrupt
