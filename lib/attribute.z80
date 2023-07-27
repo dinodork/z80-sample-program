@@ -1,4 +1,8 @@
 
+
+    ifndef lib_attribute_z80
+    define lib_attribute_z80
+
 Flash:         EQU 0x80
 Bright:        EQU 0x40
 Paper_Black:   EQU 0x00
@@ -17,3 +21,8 @@ Ink_Green:     EQU 0x04
 Ink_Cyan:      EQU 0x05
 Ink_Yellow:    EQU 0x06
 Ink_White:     EQU 0x07
+Attribute_box_columns: EQU 32
+Attribute_box_rows:    EQU 24
+Start_Of_Attribute_Ram:    EQU 16384 + 6144
+
+    endif

@@ -15,6 +15,7 @@
 ;
 
 	include "sprite_data_block.z80"
+	include "lib/attribute.z80"
 
 Handle_Sprites:
 	LD IX, Sprite_Data_Block_Array      ; The sprite data block
@@ -80,7 +81,6 @@ Render_Sprite:
 	PUSH DE
 
 	;;; Part I: Attribute position calculation.
-	LD DE, 0
 	; Get the address attribute block from X, Y pixel position
 
 	; The Y position
@@ -92,14 +92,18 @@ Render_Sprite:
 	; and round to the nearest multiple of 8, which means clearing the five
 	; rightmost bits.
 	LD E, B
+	LD D, 0
+
 	DUP 2
 	SLA E
 	RL D
 	EDUP
+
 	LD A, E
 	AND 0xE0
 	LD E, A
-	LD IY, 16384 + 6144	; Start of video ram
+
+	LD IY, Start_Of_Attribute_Ram
 	ADD IY, DE
 
 	; The X position
@@ -110,23 +114,43 @@ Render_Sprite:
 	EDUP
 	ADD IY, DE
 
-	; Write it to graphics ram.
-	; To do: Handle the special case when the sprite fits perfectly in two
-	; character block, either horizontally or vertically, or both.
-	LD A, (IX + Sprite_Attribute)
-	LD (IY), A
-	LD (IY + 1), A
-	LD (IY + 2), A
+	; Write it all to graphics ram.
+	LD D, (IX + Sprite_Attribute)
+	LD (IY), D
+	LD (IY + 1), D
 
-	LD (IY + 32), A
-	LD (IY + 32 + 1), A
-	LD (IY + 32 + 2), A
+	LD (IY + Attribute_box_columns), D
+	LD (IY + Attribute_box_columns + 1), D
 
-	LD (IY + 64), A
-	LD (IY + 64 + 1), A
-	LD (IY + 64 + 2), A
+	LD A, B
+	AND 0xF4
+	LD E, 0
+	JR NZ, Even_Y_Pixel
+	; The sprite is not an an even 8 pixel row, draw one
+	; extra row of color. And remember this in E.
+	LD (IY + Attribute_box_columns * 2), D
+	LD (IY + Attribute_box_columns * 2 + 1), D
+	LD E, 1
+Even_Y_Pixel:
 
 	CALL Get_Pixel_Address
+
+	CP A, 0
+
+	JR Z, Even_X_Pixel:
+	; TDe sprite is not on an even attribute box boundary; we Dave to paint one
+	; more column of them to the right.
+	LD (IY + 2), D
+	LD (IY + Attribute_box_columns + 2), D
+
+	; Literally a corner case below. If both the X and Y coordinates are
+	; non-divisible by 8, we need to color the corner, at (X+2, Y+2).
+	LD B, E				; A bit of a hack to jump if E != 0,
+	DJNZ Even_X_Pixel	; this instruction is meant for loops, but...
+	LD (IY + Attribute_box_columns * 2 + 2), D
+Even_X_Pixel:
+	;;; Part II: Drawing the pixels.
+
 	POP DE
 	PUSH HL			; Store screen address temporarily
 	; We now have the bit offset (X bit coordinate % 8) in A,
