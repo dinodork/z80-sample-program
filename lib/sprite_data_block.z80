@@ -12,7 +12,7 @@ Sprite_Speed_X:	EQU 0x0B	; Rightward speed
 Sprite_Attribute: EQU 0x0C
 Sprite_End: EQU 0xD
 Sprite_Data_Block_Size:	EQU Sprite_End
-Sprite_Data_Block_Array_Size:		EQU 0x02
+Sprite_Data_Block_Array_Size:		EQU 0x04
 
 Player_Data_block:
 Sprite_Data_Block_Array:

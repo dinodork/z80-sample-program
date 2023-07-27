@@ -77,12 +77,18 @@ Demo_Sprite_Check_Left_Edge
 Demo_Sprite_Move_X
 	ADD A, (IX + Sprite_Speed_X)
 
+Screen_Height: EQU 192
+Girder_Height: EQU 8
+Sprite_Height: EQU 16
+
+Girder_Position: EQU Screen_Height - Girder_Height
+Bounce_Y: EQU Girder_Position - Sprite_Height
 ; Move the sprite vertically
 Demo_Sprite_Logic_1
 	LD (IX + Sprite_X), A
 	LD A, (IX + Sprite_Y)
 	ADD A, (IX + Sprite_Speed_Y)
-	CP 176
+	CP Bounce_Y
 	JR C, Demo_Sprite_Logic_2
 	; We hit the ground, bounce
 	LD B, (IX + Sprite_Speed_Y)	; Change Sprite_speed's sign
@@ -90,7 +96,7 @@ Demo_Sprite_Logic_1
 	SBC A, B
 	DEC A						; Extra push so we bounce forever
 	LD (IX + Sprite_Speed_Y), A
-	LD A, 176
+	LD A, Bounce_Y
 Demo_Sprite_Logic_2
 	LD (IX + Sprite_Y), A
 	LD A, (IX + Sprite_Speed_Y)
