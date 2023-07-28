@@ -1,0 +1,16 @@
+
+; Checks collision between player and other sprites.
+; HL = Address of sprite definition table
+Check_Collision:
+	; Self-modifying code ahead!
+	; Instead of pushing and popping HL,
+	; Store it as the operand inside the LD DE instruction.
+	; The opcode is a single byte, hence we can write at the next byte.
+
+	LD IX, Sprite_Data_Block_Array
+	LD B, Sprite_Data_Block_Array_Size
+Check_Collision_Loop:
+    LD A, (IX + Sprite_X)
+	LD C, (IX + Sprite_Data_Block_Size + Sprite_X)
+
+	RET

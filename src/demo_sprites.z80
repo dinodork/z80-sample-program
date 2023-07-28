@@ -12,15 +12,15 @@
 			DEVICE ZXSPECTRUM48			; sjasmplus directive for SAVESNA at end
 
 
+			include "../build/graphics/bubble2x2.asm"	; to do: Stop hardcoding this
+			include "../build/graphics/player.asm"
+			include "../lib/collision.z80"
 			include "../lib/keyboard.z80"
+			include "../lib/math.z80"
 			include "../lib/output.z80"
 			include "../lib/screen_buffer.z80"
 			include "../lib/sound.z80"
 			include "../lib/sprite.z80"
-			include "../lib/math.z80"
-			; to do: Stop hardcoding this
-			include "../build/graphics/bubble2x2.asm"
-			include "../build/graphics/player.asm"
 
 Initialise_Sprites:
 	LD IX, Sprite_Data_Block_Array
@@ -34,7 +34,7 @@ Initialise_Sprites:
 	LD (IX + Sprite_Logic), 0
 	LD (IX + Sprite_Logic + 1), 0
 	LD (IX + Sprite_Speed_Y), 1
-	LD (IX + Sprite_Speed_X), 1
+	LD (IX + Sprite_Speed_X), 10
 	LD (IX + Sprite_Attribute), 0x47	; Bright white on black
 
 ; Initialize the rest
@@ -123,6 +123,7 @@ Interrupt:
 	LD HL, Player_Frames
 	CALL Render_Sprites
 	CALL Handle_Sprites
+	CALL Check_Collision
 	LD A,7
 	OUT (254),A
 	POP IY
