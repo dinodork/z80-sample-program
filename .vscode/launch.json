@@ -148,8 +148,9 @@
                 }
             ],
             "startAutomatically": true,
-            "rootFolder": "${config:buildDirectory}",
-            "load": "z80-sample-program.nex"
+            // Apparently variables don't work here, hard-coding the path as a workaround.
+            "rootFolder": "/Users/martin/gitroot/z80-sample-program/build",
+            "load": "z80-sample-program.sna"
         }
     ]
 }
