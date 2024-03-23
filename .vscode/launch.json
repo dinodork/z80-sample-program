@@ -27,7 +27,7 @@
             },
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${config:buildDirectory}",
+            "rootFolder": "${config:buildPath}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.sna",
@@ -51,7 +51,7 @@
             },
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${config:buildDirectory}",
+            "rootFolder": "${config:buildPath}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -74,7 +74,7 @@
             },
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${config:buildDirectory}",
+            "rootFolder": "${config:buildPath}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -100,7 +100,7 @@
             },
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${config:buildDirectory}",
+            "rootFolder": "${config:buildPath}",
             "topOfStack": "stack_top",
             //"load": "z80-sample-program.sna",
             "load": "z80-sample-program.nex",
@@ -122,7 +122,7 @@
             ],
             "startAutomatically": false,
             "commandsAfterLaunch": [],
-            "rootFolder": "${config:buildDirectory}",
+            "rootFolder": "${config:buildPath}",
             "topOfStack": "stack_top",
             "load": "z80-sample-program.sna",
             "smallValuesMaximum": 513,
@@ -149,7 +149,7 @@
             ],
             "startAutomatically": true,
             // Apparently variables don't work here, hard-coding the path as a workaround.
-            "rootFolder": "/Users/martin/gitroot/z80-sample-program/build",
+            "rootFolder": "${config:buildPath}",
             "load": "z80-sample-program.sna"
         }
     ]

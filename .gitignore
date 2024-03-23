@@ -1,5 +1,4 @@
 *.obj
 .DS_Store
-.vscode/settings.json
 .tmp/
 build
